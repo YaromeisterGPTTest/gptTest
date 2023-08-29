@@ -1,0 +1,221 @@
+ public static List<Country> FilterCountriesByString(string? queryString, List<Country> countries)
+        {
+            if (string.IsNullOrEmpty(queryString))
+            {
+                return countries;
+            }
+
+            queryString = queryString.ToLower();
+
+            var filteredCountries = countries.Where(country => country.Name.Common.ToLower().Contains(queryString)).ToList();
+
+            return filteredCountries;
+        }
+
+        public static List<Country> FilterCountriesByPopulation(int? maxPopulationInMillions, List<Country> countries)
+        {
+            if (maxPopulationInMillions == null)
+            {
+                return countries;
+            }
+
+            var filteredCountries = countries.Where(c => c.Population < maxPopulationInMillions * 1000000).ToList();
+
+            return filteredCountries;
+        }
+
+        public static List<Country> SortCountries(string? order, List<Country> countries)
+        {
+            if (order?.ToLower() != "ascend" && order?.ToLower() != "descend")
+            {
+                return countries;
+            }
+
+            if (order.ToLower() == "descend")
+            {
+                countries = countries.OrderByDescending(c => c.Name.Common.ToLower()).ToList();
+            }
+            else
+            {
+                countries = countries.OrderBy(c => c.Name.Common.ToLower()).ToList();
+            }
+
+            return countries;
+        }
+
+        public static List<Country> GetFirstNRecords(int? n, List<Country> countries)
+        {
+            if (n != null && n > 0)
+            {
+                return countries.Take((int)n).ToList();
+            }
+            else
+            {
+                return countries;
+            }
+        }
+Create unit tests for these 4 functions
+
+
+
+To create unit tests for these functions, you'll want to use a testing framework. Here, I'll demonstrate how to write unit tests using the NUnit framework. Ensure you have added a reference to NUnit and NUnit3TestAdapter in your project.
+
+```csharp
+using NUnit.Framework;
+using System.Collections.Generic;
+using System.Linq;
+
+// Assuming you have your functions in a static class named CountryUtils
+public static class CountryUtils
+{
+    // Your functions here...
+}
+
+[TestFixture]
+public class CountryUtilsTests
+{
+    private List<Country> _sampleCountries;
+
+    [SetUp]
+    public void SetUp()
+    {
+        _sampleCountries = new List<Country>
+        {
+            new Country { Name = new CountryName { Common = "Zambia" }, Population = 18000000 },
+            new Country { Name = new CountryName { Common = "Angola" }, Population = 32000000 },
+            new Country { Name = new CountryName { Common = "Brazil" }, Population = 210000000 }
+        };
+    }
+
+    [Test]
+    public void TestFilterCountriesByString()
+    {
+        var result = CountryUtils.FilterCountriesByString("br", _sampleCountries);
+        Assert.AreEqual(1, result.Count);
+        Assert.AreEqual("Brazil", result[0].Name.Common);
+    }
+
+    [Test]
+    public void TestFilterCountriesByPopulation()
+    {
+        var result = CountryUtils.FilterCountriesByPopulation(25, _sampleCountries);
+        Assert.AreEqual(1, result.Count);
+        Assert.AreEqual("Zambia", result[0].Name.Common);
+    }
+
+    [Test]
+    public void TestSortCountriesAscend()
+    {
+        var result = CountryUtils.SortCountries("ascend", _sampleCountries);
+        Assert.AreEqual("Angola", result[0].Name.Common);
+        Assert.AreEqual("Brazil", result[1].Name.Common);
+        Assert.AreEqual("Zambia", result[2].Name.Common);
+    }
+
+    [Test]
+    public void TestSortCountriesDescend()
+    {
+        var result = CountryUtils.SortCountries("descend", _sampleCountries);
+        Assert.AreEqual("Zambia", result[0].Name.Common);
+        Assert.AreEqual("Brazil", result[1].Name.Common);
+        Assert.AreEqual("Angola", result[2].Name.Common);
+    }
+
+    [Test]
+    public void TestGetFirstNRecords()
+    {
+        var result = CountryUtils.GetFirstNRecords(2, _sampleCountries);
+        Assert.AreEqual(2, result.Count);
+    }
+}
+
+public class Country
+{
+    public CountryName Name { get; set; }
+    public int Population { get; set; }
+}
+
+public class CountryName
+{
+    public string Common { get; set; }
+}
+```
+
+Note:
+
+1. Before executing the unit tests, make sure to install and set up NUnit and NUnit3TestAdapter.
+2. The `SetUp` method is executed before each test and is used to set up any shared data or state.
+3. This is a simple demonstration; for real-world scenarios, you may want to create more tests, especially edge cases, for comprehensive coverage.
+
+
+set up NUnit for me
+
+
+Setting up NUnit in a .NET project is fairly straightforward. Here are the steps to set up NUnit for unit testing:
+
+1. **Install Necessary Packages**:
+
+   You need to install at least two NuGet packages: `NUnit` and `NUnit3TestAdapter`.
+
+   - **Via NuGet Package Manager**:
+     ```bash
+     Install-Package NUnit -Version 3.13.1
+     Install-Package NUnit3TestAdapter -Version 4.0.0
+     ```
+
+   - **Via .NET CLI**:
+     ```bash
+     dotnet add package NUnit --version 3.13.1
+     dotnet add package NUnit3TestAdapter --version 4.0.0
+     ```
+
+2. **Write Tests**:
+
+   Create a new class to contain your tests, and then decorate it with the `[TestFixture]` attribute. Each test method within this class should have the `[Test]` attribute.
+
+   ```csharp
+   using NUnit.Framework;
+
+   [TestFixture]
+   public class MyTests
+   {
+       [Test]
+       public void MyTestMethod()
+       {
+           // Your testing code here...
+       }
+   }
+   ```
+
+3. **Running Tests**:
+
+   - **Via Visual Studio**:
+
+     If you're using Visual Studio, after installing the `NUnit3TestAdapter` package, your tests should appear in the Test Explorer window. From there, you can run and debug your tests as usual.
+
+   - **Via .NET CLI**:
+
+     You can use the `dotnet test` command to run your NUnit tests:
+     ```bash
+     dotnet test
+     ```
+
+4. **Additional SetUp (Optional)**:
+
+   You might also want to install the `Microsoft.NET.Test.Sdk` NuGet package, which is the MSBuild targets and properties for building .NET Test projects.
+
+   - **Via NuGet Package Manager**:
+     ```bash
+     Install-Package Microsoft.NET.Test.Sdk
+     ```
+
+   - **Via .NET CLI**:
+     ```bash
+     dotnet add package Microsoft.NET.Test.Sdk
+     ```
+
+5. **Additional Notes**:
+
+   Make sure your test project references the main project or any other projects where the classes/methods you want to test are located.
+
+Now, with NUnit set up, you can write unit tests for your methods and classes, and execute them either via the command line or within Visual Studio (or any other preferred IDE that supports NUnit).

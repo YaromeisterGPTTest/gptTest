@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using gptTestAPI.Models;
+using gptTestAPI.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,68 +23,14 @@ namespace controllers
             using var httpClient = new HttpClient();
             var response = JsonSerializer.Deserialize<List<Country>>(await httpClient.GetStringAsync(ApiUrl), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
 
-            response = FilterCountriesByString(param1, response);
-            response = FilterCountriesByPopulation(param2, response);
-            response = SortCountries(param3, response);
-            response = GetFirstNRecords(param4, response);
+            response = CountryService.FilterCountriesByString(param1, response);
+            response = CountryService.FilterCountriesByPopulation(param2, response);
+            response = CountryService.SortCountries(param3, response);
+            response = CountryService.GetFirstNRecords(param4, response);
 
             return Ok(response);
         }
 
-        private List<Country> FilterCountriesByString(string? queryString, List<Country> countries)
-        {
-            if (string.IsNullOrEmpty(queryString))
-            {
-                return countries;
-            }
 
-            queryString = queryString.ToLower();
-
-            var filteredCountries = countries.Where(country => country.Name.Common.ToLower().Contains(queryString)).ToList();
-
-            return filteredCountries;
-        }
-
-        private List<Country> FilterCountriesByPopulation(int? maxPopulationInMillions, List<Country> countries)
-        {
-            if (maxPopulationInMillions == null)
-            {
-                return countries;
-            }
-
-            var filteredCountries = countries.Where(c => c.Population < maxPopulationInMillions * 1000000).ToList();
-
-            return filteredCountries;
-        }
-
-        private List<Country> SortCountries(string? order, List<Country> countries)
-        {
-            if (order?.ToLower() != "ascend" && order?.ToLower() != "descend")
-            {
-                return countries;
-            }
-
-            if (order.ToLower() == "descend")
-            {
-                countries = countries.OrderByDescending(c => c.Name.Common.ToLower()).ToList();
-            }
-            else
-            {
-                countries = countries.OrderBy(c => c.Name.Common.ToLower()).ToList();
-            }
-
-            return countries;
-        }
-
-        private List<Country> GetFirstNRecords(int? n, List<Country> countries)
-        {
-            if (n != null && n > 0)
-            {
-                return countries.Take((int)n).ToList();
-            } else
-            {
-                return countries;
-            }
-        }
     }
 }
