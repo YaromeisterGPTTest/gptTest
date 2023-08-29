@@ -24,7 +24,7 @@ namespace controllers
             var response = JsonSerializer.Deserialize<List<Country>>(await httpClient.GetStringAsync(ApiUrl), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
 
             response = CountryService.FilterCountriesByString(param1, response);
-            response = CountryService.FilterCountriesByPopulation(float.Parse(param2 ?? "0"), response);
+            response = CountryService.FilterCountriesByPopulation(param2, response);
             response = CountryService.SortCountries(param3, response);
             response = CountryService.GetFirstNRecords(param4, response);
 

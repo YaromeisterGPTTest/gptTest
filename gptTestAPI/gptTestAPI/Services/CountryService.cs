@@ -18,14 +18,14 @@ namespace gptTestAPI.Services
             return filteredCountries;
         }
 
-        public static List<Country> FilterCountriesByPopulation(float maxPopulationInMillions, List<Country> countries)
+        public static List<Country> FilterCountriesByPopulation(string maxPopulationInMillions, List<Country> countries)
         {
             if (maxPopulationInMillions == null)
             {
                 return countries;
             }
 
-            var filteredCountries = countries.Where(c => c.Population < maxPopulationInMillions * 1000000).ToList();
+            var filteredCountries = countries.Where(c => c.Population < float.Parse(maxPopulationInMillions) * 1000000).ToList();
 
             return filteredCountries;
         }
