@@ -18,19 +18,17 @@ namespace controllers
         private const string ApiUrl = "https://restcountries.com/v3.1/all";
 
         [HttpGet]
-        public async Task<IActionResult> GetCountries(string? param1 = null, int? param2 = null, string? param3 = null, int? param4 = null)
+        public async Task<IActionResult> GetCountries(string? param1 = null, string? param2 = null, string? param3 = null, int? param4 = null)
         {
             using var httpClient = new HttpClient();
             var response = JsonSerializer.Deserialize<List<Country>>(await httpClient.GetStringAsync(ApiUrl), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
 
             response = CountryService.FilterCountriesByString(param1, response);
-            response = CountryService.FilterCountriesByPopulation(param2, response);
+            response = CountryService.FilterCountriesByPopulation(float.Parse(param2 ?? "0"), response);
             response = CountryService.SortCountries(param3, response);
             response = CountryService.GetFirstNRecords(param4, response);
 
             return Ok(response);
         }
-
-
     }
 }

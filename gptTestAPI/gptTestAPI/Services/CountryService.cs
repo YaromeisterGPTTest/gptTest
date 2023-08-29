@@ -18,7 +18,7 @@ namespace gptTestAPI.Services
             return filteredCountries;
         }
 
-        public static List<Country> FilterCountriesByPopulation(int? maxPopulationInMillions, List<Country> countries)
+        public static List<Country> FilterCountriesByPopulation(float maxPopulationInMillions, List<Country> countries)
         {
             if (maxPopulationInMillions == null)
             {
