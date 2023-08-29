@@ -1,0 +1,109 @@
+Create a function that accepts a number as an attribute and can filter by ` population `.
+
+The filter should search for countries where the population is less than provided number from attributes in the millions of people (e.g., by providing value `10`, I should find countries with a population less than 10m)
+
+Use .net 6. Function returns json string
+
+
+
+To create this function, you would first need a data source for country populations. For this example, I'll use a simple hardcoded list of countries and their populations. In a real-world scenario, you'd likely want to pull this data from a database or an API.
+
+Here's how you could implement this function using .NET 6:
+
+```csharp
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json;
+
+public class Country
+{
+    public string Name { get; set; }
+    public double PopulationInMillions { get; set; }
+}
+
+public class Program
+{
+    static List<Country> countries = new List<Country>
+    {
+        new Country { Name = "Australia", PopulationInMillions = 25.5 },
+        new Country { Name = "Canada", PopulationInMillions = 37.6 },
+        new Country { Name = "New Zealand", PopulationInMillions = 4.9 },
+        // ... Add other countries as needed
+    };
+
+    public static string GetCountriesByPopulation(double maxPopulationInMillions)
+    {
+        var filteredCountries = countries.Where(c => c.PopulationInMillions < maxPopulationInMillions).ToList();
+        return JsonSerializer.Serialize(filteredCountries);
+    }
+
+    static void Main(string[] args)
+    {
+        double maxPopulation = 10;  // Example input
+        string resultJson = GetCountriesByPopulation(maxPopulation);
+        Console.WriteLine(resultJson);
+    }
+}
+```
+
+In this code, the `GetCountriesByPopulation` function filters the hardcoded list of countries based on a maximum population specified in millions. The result is serialized to JSON using the `JsonSerializer` class, which is part of the System.Text.Json namespace in .NET Core and .NET 5+.
+
+To use this in a real-world application, you might also consider using ASP.NET Core to expose this functionality as a web API endpoint, allowing clients to query for countries by population via an HTTP request.
+
+
+
+
+input parameters are int and json string
+
+
+
+If the input parameters are an integer representing the maximum population in millions and a JSON string that holds the country data, you can modify the function as follows:
+
+```csharp
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json;
+
+public class Country
+{
+    public string Name { get; set; }
+    public int PopulationInMillions { get; set; }  // Changed to int based on your input
+}
+
+public class Program
+{
+    public static string FilterCountriesByPopulation(int maxPopulationInMillions, string countriesJson)
+    {
+        // Deserialize the input JSON string to a list of countries
+        List<Country> countries = JsonSerializer.Deserialize<List<Country>>(countriesJson);
+
+        // Filter the list based on the maximum population
+        var filteredCountries = countries.Where(c => c.PopulationInMillions < maxPopulationInMillions).ToList();
+
+        // Serialize the result back to JSON
+        return JsonSerializer.Serialize(filteredCountries);
+    }
+
+    static void Main(string[] args)
+    {
+        int maxPopulation = 10;  // Example input
+        string countriesJson = @"[
+            { ""Name"": ""Australia"", ""PopulationInMillions"": 25 },
+            { ""Name"": ""Canada"", ""PopulationInMillions"": 38 },
+            { ""Name"": ""New Zealand"", ""PopulationInMillions"": 5 }
+            // ... Add other countries as needed
+        ]";
+
+        string resultJson = FilterCountriesByPopulation(maxPopulation, countriesJson);
+        Console.WriteLine(resultJson);
+    }
+}
+```
+
+In this modified version, the `FilterCountriesByPopulation` function first deserializes the input JSON string into a list of `Country` objects. It then filters this list based on the specified maximum population and finally serializes the filtered list back to JSON to return the result.
+
+
+
+
