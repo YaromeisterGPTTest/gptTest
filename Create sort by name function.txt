@@ -1,0 +1,115 @@
+
+Create a function that accepts a string as an attribute and can sort data by ` name/common `.
+
+The sort should accept string ` ascend or descend ` and sort countries name by provided attribute (e.g. providing attribute ascend all countries should be sorted from A to Z)
+
+use .net 6. input is string query param and json string data. returns json string.
+
+
+
+Sure! Below is a simple .NET 6 application using C# that defines an API endpoint to sort a list of countries by name in ascending or descending order:
+
+```csharp
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
+
+namespace CountrySorterApi
+{
+    public class Country
+    {
+        public string Name { get; set; }
+        public string Common { get; set; }
+    }
+
+    [ApiController]
+    [Route("[controller]")]
+    public class CountryController : ControllerBase
+    {
+        [HttpGet("sort")]
+        public ActionResult<string> SortCountries([FromQuery] string order, [FromBody] string countriesJson)
+        {
+            List<Country> countries;
+
+            try
+            {
+                countries = JsonSerializer.Deserialize<List<Country>>(countriesJson);
+            }
+            catch
+            {
+                return BadRequest("Invalid JSON data provided.");
+            }
+
+            if (order.ToLower() == "descend")
+            {
+                countries = countries.OrderByDescending(c => c.Name).ToList();
+            }
+            else if (order.ToLower() == "ascend")
+            {
+                countries = countries.OrderBy(c => c.Name).ToList();
+            }
+            else
+            {
+                return BadRequest("Invalid order provided. Use 'ascend' or 'descend'.");
+            }
+
+            return JsonSerializer.Serialize(countries);
+        }
+    }
+
+    public class Startup
+    {
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddControllers();
+        }
+
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+
+            app.UseRouting();
+            app.UseEndpoints(endpoints => endpoints.MapControllers());
+        }
+    }
+
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            var host = new WebHostBuilder()
+                .UseKestrel()
+                .UseStartup<Startup>()
+                .Build();
+
+            host.Run();
+        }
+    }
+}
+```
+
+To use this application:
+
+1. Set up a new .NET 6 project.
+2. Add the above code.
+3. Start the server.
+4. To sort a list of countries, make an HTTP GET request to `http://localhost:5000/country/sort?order=ascend` (or `descend`). Provide the JSON list of countries in the request body.
+
+Sample request body:
+```json
+[
+    {"Name":"Zimbabwe", "Common":"Zimbabwe"},
+    {"Name":"Albania", "Common":"Albania"},
+    {"Name":"Canada", "Common":"Canada"}
+]
+```
+
+This will return the list sorted by the name in ascending or descending order based on the query parameter you pass.
