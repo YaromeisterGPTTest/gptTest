@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Country Form</title>
+    <style>
+        #country-list img {
+            width: 100px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+<form id="country-form">
+    <label for="field1">Filter by name:</label>
+    <input type="text" id="field1" name="field1"><br><br>
+
+    <label for="field2">Filter by max population (in millions):</label>
+    <input type="text" id="field2" name="field2"><br><br>
+
+    <label for="field3">Sort (ascend/descend):</label>
+    <input type="text" id="field3" name="field3"><br><br>
+
+    <label for="field4">Limit the number of records to:</label>
+    <input type="text" id="field4" name="field4"><br><br>
+
+    <input type="submit" value="Submit">
+</form>
+
+<div id="country-list">
+    <h2>Countries</h2>
+</div>
+
+<script>
+    function displayCountry(data) {
+        const countryList = document.getElementById('country-list');
+
+
+        const countryDiv = document.createElement('div');
+        countryDiv.className = 'country';
+
+
+        const commonName = document.createElement('h3');
+        commonName.textContent = data.name.common;
+        countryDiv.appendChild(commonName);
+
+        const officialName = document.createElement('p');
+        officialName.innerHTML = `<strong>Official Name:</strong> ${data.name.official}`;
+        countryDiv.appendChild(officialName);
+
+        const population = document.createElement('p');
+        population.innerHTML = `<strong>Population:</strong> ${data.population}`;
+        countryDiv.appendChild(population);
+
+        countryList.appendChild(countryDiv);
+    }
+
+    document.getElementById('country-form').addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const field1 = document.getElementById('field1').value;
+        const field2 = document.getElementById('field2').value;
+        const field3 = document.getElementById('field3').value;
+        const field4 = document.getElementById('field4').value;
+
+        const url = `https://localhost:7177/api/Country?param1=${field1}&param2=${field2}&param3=${field3}&param4=${field4}`;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                if (Array.isArray(data)) {
+                    document.getElementById('country-list').innerHTML = '';
+                    data.forEach(country => displayCountry(country));
+                } else {
+                    displayCountry(data);
+                }
+            })
+            .catch(error => console.error('Error fetching country data:', error));
+    });
+
+</script>
+</body>
+
+</html>
