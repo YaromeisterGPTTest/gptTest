@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -24,11 +25,12 @@ namespace controllers
             response = FilterCountriesByString(param1, response);
             response = FilterCountriesByPopulation(param2, response);
             response = SortCountries(param3, response);
+            response = GetFirstNRecords(param4, response);
 
             return Ok(response);
         }
 
-        private List<Country> FilterCountriesByString(string queryString, List<Country> countries)
+        private List<Country> FilterCountriesByString(string? queryString, List<Country> countries)
         {
             if (string.IsNullOrEmpty(queryString))
             {
@@ -54,9 +56,9 @@ namespace controllers
             return filteredCountries;
         }
 
-        private List<Country> SortCountries(string order, List<Country> countries)
+        private List<Country> SortCountries(string? order, List<Country> countries)
         {
-            if (order.ToLower() != "ascend" && order.ToLower() != "descend")
+            if (order?.ToLower() != "ascend" && order?.ToLower() != "descend")
             {
                 return countries;
             }
@@ -71,6 +73,17 @@ namespace controllers
             }
 
             return countries;
+        }
+
+        private List<Country> GetFirstNRecords(int? n, List<Country> countries)
+        {
+            if (n != null && n > 0)
+            {
+                return countries.Take((int)n).ToList();
+            } else
+            {
+                return countries;
+            }
         }
     }
 }

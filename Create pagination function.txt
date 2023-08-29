@@ -1,0 +1,68 @@
+Create a function that accepts numbers as an attribute and can limit the number of records.
+
+The functionality should accept a number and retrieve first n records (e.g., providing number `15` I should receive 15 first records from API).
+
+use .net 6. first parametes is int, secont parameter is List<Countries>
+Returns List<Countries>
+
+
+
+To create a function that accepts a number as an attribute and returns the first 'n' records from a given list, you can follow the below steps.
+
+Let's assume you have a `Country` class defined somewhere in your application:
+
+```csharp
+public class Country
+{
+    public string Name { get; set; }
+    // ... other properties if needed
+}
+```
+
+Now, let's create the desired function:
+
+```csharp
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+public class RecordLimiter
+{
+    public static List<Country> GetFirstNRecords(int n, List<Country> countries)
+    {
+        if(n < 0)
+        {
+            throw new ArgumentException("The number of records to retrieve must be non-negative.");
+        }
+
+        return countries.Take(n).ToList();
+    }
+}
+```
+
+Here's how you can use this function:
+
+```csharp
+public class Program
+{
+    public static void Main()
+    {
+        List<Country> countries = new List<Country>
+        {
+            new Country { Name = "USA" },
+            new Country { Name = "Canada" },
+            // ... Add more countries to your list as needed
+        };
+
+        int n = 15; // You want the first 15 countries
+        var limitedCountries = RecordLimiter.GetFirstNRecords(n, countries);
+
+        foreach (var country in limitedCountries)
+        {
+            Console.WriteLine(country.Name);
+        }
+    }
+}
+```
+
+Note: This code uses the LINQ `Take` method to retrieve the first 'n' records from the list. If the list has less than 'n' records, it will just return the available records without any issues.
