@@ -1,0 +1,72 @@
+I need an endpoint that can accept from 0 to 4 parameters. 1 and 3 parameters are string 2 and 4 parameters are int.
+It should make a request to https://restcountries.com/v3.1/all to retrieve countries data.
+It should pasre retrieved JSON to variable/object.
+
+use .net 6 webAPI
+
+To create an endpoint in a .NET 6 WebAPI project that can accept 0 to 4 parameters, where the 1st and 3rd parameters are strings and the 2nd and 4th parameters are ints, follow these steps:
+
+1. **Create a New .NET 6 WebAPI Project:**
+   If you haven't already, you can create a new project with:
+   ```
+   dotnet new webapi -n CountryAPI
+   ```
+
+2. **Install Necessary Packages:**
+   You need to install the `Newtonsoft.Json` package to handle JSON:
+   ```
+   dotnet add package Newtonsoft.Json
+   ```
+
+3. **Update the Startup.cs:**
+   Make sure you've added services for the necessary components. In the `ConfigureServices` method of `Startup.cs`, ensure you have:
+   ```csharp
+   services.AddControllers();
+   ```
+
+4. **Create the API Endpoint:**
+   In your `Controllers` folder, create a new controller called `CountryController.cs` and add the following code:
+
+```csharp
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
+
+[ApiController]
+[Route("api/[controller]")]
+public class CountryController : ControllerBase
+{
+    private const string ApiUrl = "https://restcountries.com/v3.1/all";
+
+    [HttpGet]
+    public async Task<IActionResult> GetCountries(string param1 = null, int? param2 = null, string param3 = null, int? param4 = null)
+    {
+        using var httpClient = new HttpClient();
+        var response = await httpClient.GetStringAsync(ApiUrl);
+        var countries = JArray.Parse(response);
+
+        // Do something with the parameters and countries data if needed
+
+        return Ok(countries);
+    }
+}
+```
+
+This sets up a `GET` endpoint that can accept 0-4 parameters. The parameters are optional thanks to the default `null` values.
+
+5. **Run Your API:**
+   Navigate to the root directory of your project in your terminal or command prompt and run:
+   ```
+   dotnet run
+   ```
+
+You can then access your API by navigating to `https://localhost:5001/api/country` in a web browser or a tool like Postman. You can provide parameters as query parameters in the URL, like this:
+```
+https://localhost:5001/api/country?param1=test&param2=123&param3=anotherTest&param4=456
+```
+
+Remember to handle errors and edge cases as necessary, and consider adding more detailed logic for processing or filtering the retrieved countries based on your application's needs.
+
+

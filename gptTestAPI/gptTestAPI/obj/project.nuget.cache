@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "NgS61KVdOCdCPT5Rx55QWS3GnzV3+EodVk82T29JV3pYInQqqxMD/GkaFkViulfJjLmbQdK+JS2748XyvbrjMA==",
+  "dgSpecHash": "snHz/SHlUAMlbKPsgrs6CRUODEYii6WBoHVvXsoCB9EXmXh2GhVroGqPfaXz7Kq1d5IhW12n9ldjRh9CtUTXTg==",
   "success": true,
   "projectFilePath": "C:\\Users\\ayare\\Documents\\code\\gptTest\\gptTestAPI\\gptTestAPI\\gptTestAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\ayare\\.nuget\\packages\\microsoft.extensions.apidescription.server\\3.0.0\\microsoft.extensions.apidescription.server.3.0.0.nupkg.sha512",
     "C:\\Users\\ayare\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
+    "C:\\Users\\ayare\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
     "C:\\Users\\ayare\\.nuget\\packages\\swashbuckle.aspnetcore\\6.2.3\\swashbuckle.aspnetcore.6.2.3.nupkg.sha512",
     "C:\\Users\\ayare\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.2.3\\swashbuckle.aspnetcore.swagger.6.2.3.nupkg.sha512",
     "C:\\Users\\ayare\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.2.3\\swashbuckle.aspnetcore.swaggergen.6.2.3.nupkg.sha512",

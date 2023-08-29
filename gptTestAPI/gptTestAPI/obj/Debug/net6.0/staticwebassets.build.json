@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "XyvPR8luqIVg9d0oGHf9K/3LY30vUoemyDPPxk5JMeE=",
+  "Source": "gptTestAPI",
+  "BasePath": "_content/gptTestAPI",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
